@@ -1,18 +1,19 @@
 package ly.generalassemb.drewmahrt.shoppinglistver2;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CursorAdapter;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+
+import java.util.List;
 
 import ly.generalassemb.drewmahrt.shoppinglistver2.setup.DBAssetHelper;
 
 public class MainActivity extends AppCompatActivity {
+    private RecyclerView mRecyclerView;
+    private List<GroceryItem> mGroceryItems;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +22,17 @@ public class MainActivity extends AppCompatActivity {
         //Ignore the two lines below, they are for setup
         DBAssetHelper dbSetup = new DBAssetHelper(MainActivity.this);
         dbSetup.getReadableDatabase();
+
+        mGroceryItems = ShoppingListSQLDatabaseHelper.getInstance(MainActivity.this).getAllItems();
+
+        Log.d("TAG", ""+mGroceryItems.size());
+
+
+
+        mRecyclerView = (RecyclerView)findViewById(R.id.recyclerview);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(new RecyclerViewAdapter(mGroceryItems));
 
     }
 }
